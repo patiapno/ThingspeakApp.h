@@ -3,7 +3,7 @@
 #include <ESP8266HTTPClient.h>
 #include "ThingspeakApp.h"
 #define  host "api.thingspeak.com"
-#define libversion "0.1beta"
+#define libversion "0.1Alpha"
 const char* talk_id1;
 const char* talk_key1;
 const char* talk_id2;
@@ -102,128 +102,162 @@ int ip[4],int getway[4],int subnet[4])
 	Serial.print("\nlibrary version: ");
 	Serial.println(libversion);
 }
-String Thingspeaktalkback::Timemer(int time_on,
-const char* cdm_on,const char* cdm_off)
+void Thingspeaktalkback::SetDevicetime(int hr_on,int min_on,
+int hr_off,int min_off)
 {
-	String url="http://";
+	HR_ON=hr_on;
+	MIN_ON=min_on;
+	HR_OFF=hr_off;
+	MIN_OFF=min_off;
+}
+void Thingspeaktalkback::SetDeviceCensor(float hight,float low)
+{
+	HIGH_DATA=hight;
+	LOW_DATA=low;
+}
+void Thingspeaktalkback::DeviceaboutTime(int time_hr,int time_min,
+const char * command_on,const char* command_off)
+{
+	String url = "http://";
 	url+=host;
 	url+="/talkbacks/";
 	url+=talk_id1;
-	if(time_on>=15)
+	if(time_hr>=HR_OFF||time_hr<=HR_ON)
 	{
-		url+="/commands/";
-		url+=cdm_off;
-		url+="?api_key=";
+		if((time_min>=MIN_OFF)&&(time_hr==HR_OFF))
+		{
+			url+="/commands/";
+			url+=command_off;
+			url+="?api_key=";
+		}
+		else
+		{
+			url+="/commands/";
+			url+=command_off;
+			url+="?api_key=";
+		}
 	}
-	else if(time_on>=8)
+	else if(time_hr>=HR_ON)
 	{
-		url+="/commands/";
-		url+=cdm_on;
-		url+="?api_key=";
+		if((time_min>=MIN_ON)&&(time_hr==HR_ON))
+		{
+			url+="/commands/";
+			url+=command_on;
+			url+="?api_key=";
+		}
+		else
+		{
+			url+="/commands/";
+			url+=command_on;
+			url+="?api_key=";
+		}
 	}
 	url+=talk_key1;
-	
 	http.begin(url);
-	int state=http.GET();
-	if(state>0)
+	State=http.GET();
+	if(State>0)
 	{
-		if(state==HTTP_CODE_OK)
+		if(State==HTTP_CODE_OK)
 		{
-			String commands=http.getString();
-			Serial.println("State: "+String(state));
-			Serial.println("Commands: "+commands);
-			return commands;
+			Getcommand_time=http.getString();
+			//Serial.println("OK: "+url);
 		}
 	}
 	else
 	{
-		Serial.println("Error 400");
-		return "400";
+		Getcommand_time="Error";
+		Serial.println("Erroro: "+url);
 	}
 	http.end();
 }
-String Thingspeaktalkback::Pump(float hight_off,
+void Thingspeaktalkback::DeviceaboutCensor(float data_censor,bool logic,
 const char* cdm_on,const char* cdm_off)
 {
-	String url="http://";
-	url+=host;
-	url+="/talkbacks/";
-	url+=talk_id1;
-    if(hight_off>=1000)
+	if(logic==true)
 	{
-		url+="/commands/";
-		url+=cdm_on;
-		url+="?api_key=";
-	}
-	else if(hight_off<=200)
-	{
-		url+="/commands/";
-		url+=cdm_off;
-		url+="?api_key=";
-	}
-	url+=talk_key1;
-	
-	http.begin(url);
-	int state=http.GET();
-	if(state>0)
-	{
-		if(state==HTTP_CODE_OK)
+		String url="http://";
+		url+=host;
+		url+="/talkbacks/";
+		url+=talk_id1;
+		if(data_censor>=HIGH_DATA)
 		{
-			String commands=http.getString();
-			Serial.println("State: "+String(state));
-			Serial.println("Commands: "+commands);
-			return commands;
+			url+="/commands/";
+			url+=cdm_on;
+			url+="?api_key=";
 		}
+		else if(data_censor>=LOW_DATA&&data_censor<=HIGH_DATA)
+		{
+			url+="/commands/";
+			url+=cdm_off;
+			url+="?api_key=";
+		}
+		else if(data_censor<=LOW_DATA)
+		{
+			url+="/commands/";
+			url+=cdm_off;
+			url+="?api_key=";
+		}
+		url+=talk_key1;
+		http.begin(url);
+		
+		State=http.GET();
+		if(State>0)
+		{
+			if(State==HTTP_CODE_OK)
+			{
+				Getcommands_data=http.getString();
+				//Serial.println("URL OK: "+url);
+			}
+		}
+		else
+		{
+			Serial.println("Error: "+url);
+		}
+		http.end();
 	}
 	else
 	{
-		Serial.println("Error 400");
-		return "400";
-	}
-	http.end();
-}
-
-String Thingspeaktalkback::Air(float hum_on,
-const char* cdm_on,const char* cdm_off)
-{
-	String url="http://";
-	url+=host;
-	url+="/talkbacks/";
-	url+=talk_id1;
-	if(hum_on>=55)
-	{
-		url+="/commands/";
-		url+=cdm_on;
-		url+="?api_key=";
-	}
-	else if(hum_on>=42)
-	{
-		url+="/commands/";
-		url+=cdm_off;
-		url+="?api_key=";
-	}
-	url+= talk_key1;
-	
-	http.begin(url);
-	int state=http.GET();
-	if(state>0)
-	{
-		if(state==HTTP_CODE_OK)
+		String url="http://";
+		url+=host;
+		url+="/talkbacks/";
+		url+=talk_id1;
+		if(data_censor>=HIGH_DATA)
 		{
-			String commands=http.getString();
-			Serial.println("State: "+String(state));
-			Serial.println("Commands: "+commands);
-			return commands;
+			url+="/commands/";
+			url+=cdm_off;
+			url+="?api_key=";
 		}
+		else if(data_censor>=LOW_DATA&&data_censor<HIGH_DATA)
+		{
+			url+="/commands/";
+			url+=cdm_on;
+			url+="?api_key=";
+		}
+		else if(data_censor<=LOW_DATA)
+		{
+			url+="/commands/";
+			url+=cdm_on;
+			url+="?api_key=";
+		}
+		url+=talk_key1;
+		http.begin(url);
+		
+		State=http.GET();
+		if(State>0)
+		{
+			if(State==HTTP_CODE_OK)
+			{
+				Getcommands_data=http.getString();
+				//Serial.println("URL OK: "+url);
+			}
+		}
+		else
+		{
+			Serial.println("Error: "+url);
+		}
+		http.end();
 	}
-	else
-	{
-		Serial.println("Error 400");
-		return "400";
-	}
-	http.end();
 }
-
 float Thingspeaktalkback::Convert_toFloat(String data)
 {
 	return data.toFloat();
@@ -232,7 +266,6 @@ int Thingspeaktalkback::Convert_toInt(String data)
 {
 	return data.toInt();
 }
-
 void Thingspeaktalkback::Thingspeak_pub(float data,int field)
 {
 	Thingspeakgarph garp;

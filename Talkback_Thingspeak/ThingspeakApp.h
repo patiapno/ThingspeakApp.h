@@ -2,8 +2,8 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
 
-class Thingspeaktalkback  // ThigSpeaktalkbackcommands,use in updateThingspeakdata
-{                         // to garph  
+class Thingspeaktalkback// ThigSpeaktalkbackcommands,use in updateThingspeakdata
+{                      // to garph  
 	public:HTTPClient http;
 	public:
 		void begin(const char* ssid,const char* pass); // connect wifi
@@ -31,27 +31,30 @@ class Thingspeaktalkback  // ThigSpeaktalkbackcommands,use in updateThingspeakda
 		float Convert_toFloat(String data); //convertdata to float type
 		int Convert_toInt(String data); //convertdata to int type
 		
-		String Timemer(int time_on,const char* cdm_on,
-		const char* cdm_off); //set time to on off device
-		
-		String Pump(float hight_off,const char* cdm_on,
-		const char* cdm_off); //set soil hum to on/off pump
-		
-		String Air(float hum_on,const char* cdm_on,
-		const char* cdm_off); //set hun to on/off air
-   
     public:
     	void  Thingspeak_pub(float data,int field);
     	void  Thingspeak_mutiplepub(float data[8],int count_field);
     	String Thingspeak_read(int ch_num,int field);
- 	
-	 /*public:
- 		const char* talk_id1;
-        const char* talk_key1;
-        const char* talk_id2;
-        const char* talk_key2;
-        const char* thing_write;*/
-		 
+   
+    private:
+   	int HR_ON;
+   	int MIN_ON;
+   	int HR_OFF;
+   	int MIN_OFF;
+   	float HIGH_DATA;
+   	float LOW_DATA;
+   public:
+   	String Getcommand_time;
+   	String Getcommands_data;
+   	int State;
+   public:
+   	    void SetDeviceCensor(float hight,float low);
+   	    void SetDevicetime(int hr_on,int min_on,int hr_off,int min_off);
+   	    void DeviceaboutTime(int time_hr,int time_min,const char* command_on,
+		   const char* command_off);
+		void DeviceaboutCensor(float data_censor,bool logic,
+		const char* cdm_on,const char* cdm_off); 
+		//true=send hightopen flase=send lowopen	 
 };                                
 
 class Thingspeakgarph
