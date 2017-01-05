@@ -54,7 +54,15 @@ class Thingspeaktalkback// ThigSpeaktalkbackcommands,use in updateThingspeakdata
 		   const char* command_off);
 		void DeviceaboutCensor(float data_censor,bool logic,
 		const char* cdm_on,const char* cdm_off); 
-		//true=send hightopen flase=send lowopen	 
+		//true=send hightopen flase=send lowopen	
+		
+		void getCommand(const char* cdm_id);  //key1
+		void getCommand2(const char* cdm_id); //key2
+		/*void DeviceaboutTime(int time_hr,int time_min,
+		const char* cdm_on,const char* cdm_off,int number); 
+		
+		void DeviceaboutCensor(float data_censor, bool logic, 
+		const char* cdm_on, const char* cdm_off,int number);*/
 };                                
 
 class Thingspeakgarph
