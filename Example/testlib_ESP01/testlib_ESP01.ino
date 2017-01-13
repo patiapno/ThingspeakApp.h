@@ -5,12 +5,12 @@
 
 SoftwareSerial serial(D5,D6);
 
-#define ssid "YOU ssid"
-#define pass "YOU pass"
+#define ssid "TP-LINK_D3B838"
+#define pass "034996393"
 
-#define Talk_id "YOU talk id"
-#define Talk_key "You talk key"
-#define Thing_key "You thing key"
+#define Talk_id "12266"
+#define Talk_key "FD108CTVY6DF8XQU"
+#define Thing_key "0UTN3TESA594F39V"
 
 #define command_time1 "3476690"
 #define command_time2 "3476691"
@@ -27,7 +27,7 @@ void setup() {
   Serial.begin(115200);
   serial.begin(115200);
   Talk.begin(ssid,pass);
-  Talk.SetDeviceCensor(90.05,70.05);
+  Talk.SetDeviceCensor(70.23,40.03);
   Talk.SetDevicetime(8,20,13,30);
   Talking.SetDeviceCensor(31.3,20.7);
   delay(500);
@@ -49,8 +49,7 @@ void loop() {
   while(min1=="")
   {
     Serial.println("GET2");
-    String MINN="minute";
-    serial.print(MINN);
+    serial.print("minute");
     min1=serial.readString();
     delay(500);
   }

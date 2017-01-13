@@ -28,17 +28,26 @@ void setup() {
   digitalWrite(pin2,HIGH);
   digitalWrite(pin3,HIGH);
   digitalWrite(pin4,HIGH);
+  //SPI.begin();
   lcd.begin();
   Serial.begin(115200);
   serial.begin(115200);
   dht.setup(3);
   rtc.begin();
   delay(500);
-  lcd.print("====Wellcome====");
+  lcd.print("Welcome");
+  delay(1000);
+}
+
+void loop() {
+  lcd.clear();
+  /*lcd.setCursor(0,0);
+  lcd.print("Recive: ");
+  lcd.setCursor(1,0);
+  lcd.print("Send: ");*/
+  lcd.print("Wellcome");
   delay(2000);
   lcd.clear();
-}
-void loop() {
   DateTime now=rtc.now();
   int Hour=now.hour();
   int Minute=now.minute();
@@ -47,98 +56,120 @@ void loop() {
   float Soil2=soil2.getMoisture();
   if(serial.readString())
   {
-    lcd.clear();
-    String recive=serial.readString();
-    lcd.setCursor(0,0);
-    lcd.print("Recive: ");
-    lcd.print(recive);
-    lcd.setCursor(0,1);
-    if(recive=="hour")
+    lcd.print(serial.readString());
+    if(serial.readString()=="hour")
     {
-      lcd.print("Send: ");
+      //lcd.setCursor(0,0);
+      lcd.print(serial.readString());
+      //lcd.setCursor(1,0);
       lcd.print(Hour);
       Serial.print(Hour);
     }
-    else if(recive=="minute")
+    else if(serial.readString()=="minute")
     {
-      lcd.print("Send: ");
+      //lcd.setCursor(0,0);
+      lcd.print(serial.readString());
+      //lcd.setCursor(1,1);
       lcd.print(Minute);
       Serial.print(Minute);
     }
-    else if(recive=="soil1")
+    else if(serial.readString()=="soil1")
     {
-      lcd.print("Send: ");
+      //lcd.setCursor(0,0);
+      lcd.print(serial.readString());
+      //lcd.setCursor(1,1);
       lcd.print(Soil1);
       Serial.print(Soil1);
     }
-    else if(recive=="soil2")
+    else if(serial.readString()=="soil2")
     {
-      lcd.print("Send: ");
+      //lcd.setCursor(0,0);
+      lcd.print(serial.readString());
+      //lcd.setCursor(1,1);
       lcd.print(Soil2);
       Serial.print(Soil2);
     }
-    else if(recive=="temp1")
+    else if(serial.readString()=="temp1")
     {
-      lcd.print("Send: ");
+      //lcd.setCursor(0,0);
+      lcd.print(serial.readString());
+      //lcd.setCursor(1,0);
       lcd.print(temp);
       Serial.print(temp);
     }
-    else if(recive=="Open_light")
+    else if(serial.readString()=="Open_light")
     {
-      lcd.print("Send: ");
+      //lcd.setCursor(0,0);
+      lcd.print(serial.readString());
+      //lcd.setCursor(1,0);
       lcd.print("Open light");
       Serial.print("Open light");
       digitalWrite(pin1,LOW);
     }
-    else if(recive=="Close_light")
+    else if(serial.readString()=="Close_light")
     {
-      lcd.print("Send: ");
+      //lcd.setCursor(0,0);
+      lcd.print(serial.readString());
+      //lcd.setCursor(1,0);
       lcd.print("Close light");
       Serial.print("Close light");
       digitalWrite(pin1,HIGH);
     }
-    else if(recive=="Open_pump")
+    else if(serial.readString()=="Open_pump")
     {
-      lcd.print("Send: ");
+      //lcd.setCursor(0,0);
+      lcd.print(serial.readString());
+      //lcd.setCursor(1,0);
       lcd.print("Open pump");
       Serial.print("Open pump");
       digitalWrite(pin2,LOW);
     }
-    else if(recive=="Close_pump")
+    else if(serial.readString()=="Close_pump")
     {
-      lcd.print("Send: ");
+      //lcd.setCursor(0,0);
+      lcd.print(serial.readString());
+      //lcd.setCursor(1,0);
       lcd.print("Close pump");
       Serial.print("Close pump");
       digitalWrite(pin2,HIGH);
     }
-    else if(recive=="Open_air")
+    else if(serial.readString()=="Open_air")
     {
-      lcd.print("Send: ");
+      //lcd.setCursor(0,0);
+      //lcd.print(serial.readString());
+      //lcd.setCursor(1,0);
       lcd.print("Open air");
       Serial.print("Open air");
       digitalWrite(pin3,LOW);
     }
-    else if(recive=="Close_air")
+    else if(serial.readString()=="Close_air")
     {
-      lcd.print("Send: ");
+      //lcd.setCursor(0,0);
+      lcd.print(serial.readString());
+      //lcd.setCursor(1,0);
       lcd.print("Close air");
       Serial.print("Close air");
       digitalWrite(pin3,HIGH);
     }
-    else if(recive=="Open_pump2")
+    else if(serial.readString()=="Open_pump2")
     {
-      lcd.print("Send: ");
+      //lcd.setCursor(0,0);
+      lcd.print(serial.readString());
+      //lcd.setCursor(1,0);
       lcd.print("Open pump2");
       Serial.print("Open pump2");
       digitalWrite(pin4,LOW);
     }
-    else if(recive=="Close_pump2")
+    else if(serial.readString()=="Close_pump2")
     {
-      lcd.print("Send: ");
+      //lcd.setCursor(0,0);
+      lcd.print(serial.readString());
+      //lcd.setCursor(1,0);
       lcd.print("Close pump2");
       Serial.print("Close pump2");
       digitalWrite(pin4,HIGH);
     }
   }
   delay(2*1000);
+  lcd.clear();
 }
